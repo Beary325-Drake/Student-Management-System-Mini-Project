@@ -4,6 +4,7 @@ import exception.DuplicateStudentException;
 import exception.StudentNotFoundException;
 import interfacee.Manageable;
 import model.Student;
+import model.GraduateStudent; // Makes it possible to use GraduateStudent class in the manager
 
 import java.io.*;
 import java.util.*;
@@ -35,7 +36,8 @@ public class StudentManager implements Manageable {
         System.out.println("\n========== ADD STUDENT ==========");
 
         String id = readNonEmptyString("Enter Student ID: ");
-
+        int type; // space for student type. 1 is regular, and 2 is for graduates, who have additional grade reqs.
+        Student student; // 
         try {
             if (studentMap.containsKey(id)) {
                 throw new DuplicateStudentException(
@@ -43,31 +45,42 @@ public class StudentManager implements Manageable {
                 );
             }
 
-            String name = readNonEmptyString("Enter Name: ");
+// Start of Modifications: Adding an input to determine if the type should be Student or GraduateStudent.
+    
+            while (true) { // Type was having errors when I tried a while type != 1 && type != 2, because it was not initialized, so I used a while true loop instead with a break.
+                type = readInt("Student type (1 = Regular, 2 = Graduate): "); // Reads the next integer to determine if its a graduate student or not.
 
+                if (type == 1 || type == 2) { // if the input is valid, break the loop
+                break;
+                }
+
+                System.out.println("Please enter 1 or 2."); // if input is invalid, loop will continue
+            }
+// This loop exists to change the student type, which will edit the strictness of grading.
+            String name = readNonEmptyString("Enter Name: ");
             String course = readNonEmptyString("Enter Course: ");
 
             int age = readInt("Enter Age: ");
 
-            if (age < 5 || age > 100) {
-                System.out.println("Age must be between 5 and 100.");
-                return;
-            }
+        if (age < 5 || age > 100) {
+            System.out.println("Age must be between 5 and 100.");
+            return;
+        }
 
-            double marks = readDouble("Enter Marks: ");
+double marks = readDouble("Enter Marks: ");
 
-            if (marks < 0 || marks > 100) {
-                System.out.println("Marks must be between 0 and 100.");
-                return;
-            }
-
-            Student student = new Student(
-                    id,
-                    name,
-                    course,
-                    age,
-                    marks
-            );
+if (marks < 0 || marks > 100) {
+    System.out.println("Marks must be between 0 and 100.");
+    return;
+}
+// Beginning of Second Modificiation: Creates the right object given the student type. 
+// I don't wanna write exceptions for if its not 1 or 2, so if its not 2 it will just be the student type.
+if (type == 2) {
+    student = new GraduateStudent(id, name, course, age, marks);
+} else {
+    student = new Student(id, name, course, age, marks);
+}
+// End modifications
 
             students.add(student);
             studentMap.put(id, student);
@@ -78,7 +91,6 @@ public class StudentManager implements Manageable {
             System.out.println("Status : " + student.getStatus());
 
             saveToFile();
-
         } catch (DuplicateStudentException e) {
             System.out.println("Error: " + e.getMessage());
         }

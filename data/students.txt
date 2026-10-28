@@ -2,3 +2,6 @@ STU101|Rahul Sharma|Computer Science|21|87.5
 STU102|Priya Singh|Data Science|20|94.0
 STU103|Aman Kumar|Information Technology|22|72.0
 STU104|Ananya Verma|Artificial Intelligence|21|96.0
+100888222|Jorn|Computer Science|20|90.0
+10001233|Tim|Computer Science|20|90.0
+1003|Timothy|CS|20|90.0
